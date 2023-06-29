@@ -47,8 +47,14 @@ include 'form-common.php';
     $(document).ready(function() {
     $('button#register').click(function() {
         // Get the course id
-        var courseId = $(this).closest('tr').find('td:first').text();
-        console.log(courseId);
+        // var courseId = $(this).closest('tr').find('td:first').text();
+        // alert(courseId);
+
+        var row = $(this).closest('tr');
+        var rowData = row.find('td').map(function(){
+            return $(this).text();
+        }).get();
+        console.log(rowData);
 
         $.ajax({
          url: 'register_course.php',
