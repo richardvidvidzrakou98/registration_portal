@@ -1,0 +1,44 @@
+/* *{
+    overflow: hidden;
+} */
+body{
+    background-color: #373636;
+    /* overflow: hidden; */
+}
+.nav-bar{
+    background-color: #292828;
+    color: white;
+
+}
+.nav-bar:hover{
+    background-color: #090909;
+}
+
+/* .header-container{
+    background-color: ;
+} */
+
+#search{
+    display: flex;
+    width: 30%;
+}
+.logo{
+    height: 60px;
+}
+.logo-container{
+    margin-top: 6px;
+}
+#school-name{
+    margin-top: 19px;
+    margin-left: 10px;
+}
+#school-name h5{
+    color: rgb(168, 166, 166);
+}
+.sidebar .profile-picture{
+    margin-top: 50%;
+}
+/* #sidebar .profile-picture img{
+    background-color: red;
+    font-size: 50px;
+} */
