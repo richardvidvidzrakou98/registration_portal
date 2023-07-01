@@ -13,85 +13,50 @@ include 'form-common.php';
 
     <link rel="stylesheet" href="./css/register.css">
     <style>
-    .register-btn.registered:before {
+    /* .register-btn.registered:before {
         content: "\2713";
         color: green;
-    }
+    } */
     </style>
 
 <script>
-    // $(document).ready(function() {
-    //     $('.register-btn').click(function() {
-    //         var courseId = $(this).data('course-id');
-    //         // alert(courseId);
-    //         var btn = $(this);
-
-    //         // Send AJAX request to save the registered course to the database
-    //         $.ajax({
-    //             url: 'register_course.php',
-    //             method: 'POST',
-    //             data: { courseId: courseId },
-    //             success: function(response) {
-    //                 console.log(response);
-    //                 if (response === 'success') {
-    //                     // Update button appearance
-    //                     btn.addClass('registered').text('').attr('disabled', true);
-    //                 }
-    //             }
-    //         });
-    //     });
-    // });
-
     
 
     $(document).ready(function() {
-    $('button#register').click(function() {
-        // Get the course id
-        // var courseId = $(this).closest('tr').find('td:first').text();
-        // alert(courseId);
+    $('button#submit').click(function() {
+        //Get the course id
+         var courseId = $(this).closest('tr').find('td:first').text();
+        //  var courseId = 1;
+        alert(courseId);
 
-        var row = $(this).closest('tr');
-        var rowData = row.find('td').map(function(){
-            return $(this).text();
-        }).get();
-        console.log(rowData);
+        // var row = $(this).closest('tr');
+        // var rowData = row.find('td').map(function(){
+        //     return $(this).text();
+        // }).get();
+        // console.log(rowData);
 
         $.ajax({
-         url: 'register_course.php',
-        type: 'POST',
-        
-        data: { courseId: courseId },
-        success: function(response) {
-            // Handle the response from the server if needed
-            console.log('Data stored successfully');
+            type: 'POST',
+            url: 'register_course.php',
+            data: {
+                 courseId: courseId
+                 },
+            cache: false,
+            success: function(response) {
+                //alert(response);
         },
         error: function(xhr, status, error) {
             // Handle any errors that occur during the AJAX request
-            console.log('Error storing data: ' + error);
+            //console.log('Error storing data: ' + error);
+            console.log(xhr.responseText);
+            console.log('Error: ' + error);
         }
         });
 
 
 
 
-        // Update the button text and style
-        //$(this).text('Registered').css('background-color', 'green');
-
-        // Send the course id to the registered_courses database
-        // $.ajax({
-        //     url: 'register.php',
-        //     data: { courseId: $(this).closest('tr').find('td:first').text() },
-        //     //data: { courseId: courseId },
-        //     type: 'POST',
-        //     success: function() {
-        //         // Show a success message
-        //         alert('Course successfully registered!');
-        //     },
-        //     error: function() {
-        //         // Show an error message
-        //         alert('Error registering course!');
-        //     }
-        // });
+       
     });
 });
 </script>
@@ -113,19 +78,23 @@ include 'form-common.php';
         <?php
         $sql = "SELECT * FROM `browse_courses`";
         $result = mysqli_query($conn, $sql);
-        // if ($result) {
-        //     while ($row = mysqli_fetch_assoc($result)) {
-        //         echo "<tr>";
-        //         echo "<td>" . $row['id'] . "</td>";
-        //         echo "<td>" . $row['course_code'] . "</td>";
-        //         echo "<td>" . $row['course_title'] . "</td>";
-        //         echo "<td>" . $row['credit'] . "</td>";
-        //         echo '<td><button class="register-btn" data-course-id="' . $row['id'] . '">Register</button></td>';
-        //         echo "</tr>";
+
+
+        // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        //     if (isset($_POST['courseId']) && !empty($_POST['courseId'])) {
+        //         $courseId = $_POST['courseId'];
+        //         error_log('Received courseId: ' . $courseId);
+        //         // Process the data and save it to the database
+        //         // ...
+        //         echo 'Data received and processed successfully!';
+        //     } else {
+        //         echo 'Course ID not received.';
         //     }
         // } else {
-        //     echo "Data not found.";
+        //     echo 'Invalid request.';
         // }
+
+
 
         if ($result) {
             while ($row = mysqli_fetch_assoc($result)) {
@@ -134,7 +103,7 @@ include 'form-common.php';
                 echo "<td>" . $row['course_code'] . "</td>";
                 echo "<td>" . $row['course_title'] . "</td>";
                 echo "<td>" . $row['credit'] . "</td>";
-                echo "<td>" . "<button id='register'>Register</button>" . "</td>";
+                echo "<td>" . "<button id='submit'>register</button>" . "</td>";
                 echo "</tr>";
             }
         } else {
