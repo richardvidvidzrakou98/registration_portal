@@ -67,7 +67,7 @@
       <ul>
         <li><a href="home.php">Home</a></li>
         <li><a href="browse.php">Browse Courses</a></li>
-        <li><a href="courses.php">My Courses</a></li>
+        <li><a href="courses.php">Registragion History</a></li>
         <li><a href="register.php">Course Registration</a></li>
         <li><a href="schedule.php">Schedule</a></li>
         <li><a href="notification.php">Notification</a></li>

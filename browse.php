@@ -38,14 +38,24 @@ include 'form-common.php';
                 echo "<td>" . $row['course_code'] . "</td>";
                 echo "<td>" . $row['course_title'] . "</td>";
                 echo "<td>" . $row['credit'] . "</td>";
-                echo "<td>" . $row['status'] . "</td>";
+        
+                // Check if the course is registered
+                $courseCode = $row['course_code'];
+                $registeredSql = "SELECT * FROM `registered_courses` WHERE `course_code` = '$courseCode'";
+                $registeredResult = mysqli_query($conn, $registeredSql);
+                if (mysqli_num_rows($registeredResult) > 0) {
+                    echo "<td>Registered</td>";
+                } else {
+                    echo "<td>" . $row['status'] . "</td>";
+                }
+                
                 echo "</tr>";
             }
         } else {
             echo "Data not found.";
         }
         ?>
-
+        
         </tbody>
     </table><br><br>
     <div class="message" style="width: 60%">

@@ -12,54 +12,6 @@ include 'form-common.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" href="./css/register.css">
-    <style>
-    /* .register-btn.registered:before {
-        content: "\2713";
-        color: green;
-    } */
-    </style>
-
-<script>
-    
-
-    $(document).ready(function() {
-    $('button#submit').click(function() {
-        //Get the course id
-         var courseId = $(this).closest('tr').find('td:first').text();
-        //  var courseId = 1;
-        alert(courseId);
-
-        // var row = $(this).closest('tr');
-        // var rowData = row.find('td').map(function(){
-        //     return $(this).text();
-        // }).get();
-        // console.log(rowData);
-
-        $.ajax({
-            type: 'POST',
-            url: 'register_course.php',
-            data: {
-                 courseId: courseId
-                 },
-            cache: false,
-            success: function(response) {
-                //alert(response);
-        },
-        error: function(xhr, status, error) {
-            // Handle any errors that occur during the AJAX request
-            //console.log('Error storing data: ' + error);
-            console.log(xhr.responseText);
-            console.log('Error: ' + error);
-        }
-        });
-
-
-
-
-       
-    });
-});
-</script>
 
 </head>
 <body>
@@ -79,32 +31,26 @@ include 'form-common.php';
         $sql = "SELECT * FROM `browse_courses`";
         $result = mysqli_query($conn, $sql);
 
-
-        // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        //     if (isset($_POST['courseId']) && !empty($_POST['courseId'])) {
-        //         $courseId = $_POST['courseId'];
-        //         error_log('Received courseId: ' . $courseId);
-        //         // Process the data and save it to the database
-        //         // ...
-        //         echo 'Data received and processed successfully!';
-        //     } else {
-        //         echo 'Course ID not received.';
-        //     }
-        // } else {
-        //     echo 'Invalid request.';
-        // }
-
-
-
         if ($result) {
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row['id'] . "</td>";
-                echo "<td>" . $row['course_code'] . "</td>";
-                echo "<td>" . $row['course_title'] . "</td>";
-                echo "<td>" . $row['credit'] . "</td>";
-                echo "<td>" . "<button id='submit'>register</button>" . "</td>";
-                echo "</tr>";
+                    echo '<form action="register.php" method="POST">';
+                    echo "<tr>";
+                    echo "<td>" . $row['id'] . "</td>";
+                    echo "<td>" . $row['course_code'] . "</td>";
+                    echo "<td>" . $row['course_title'] . "</td>";
+                    echo "<td>" . $row['credit'] . "</td>";
+                    echo '<td>';
+                    echo '<button type="submit" class="register-button" onclick="registerCourse(this);">Register</button>';
+                    echo '<input type="hidden" name="courseId" value="' . $row['id'] . '">';
+                    echo '<input type="hidden" name="courseCode" value="' . $row['course_code'] . '">';
+                    echo '<input type="hidden" name="courseTitle" value="' . $row['course_title'] . '">';
+                    echo '<input type="hidden" name="credit" value="' . $row['credit'] . '">';
+                    echo '</td>';
+                    //echo "<td>" . '<button type="button" onclick="getRowData();" class="register-button" data-id="' . $row['id'] . '">register</button>' . "</td>";
+                    echo "</tr>";
+                    echo '</form>';
+                    
+
             }
         } else {
             echo "Data not found.";
@@ -113,6 +59,63 @@ include 'form-common.php';
 
         </tbody>
     </table>
+
+    <?php
+
+   
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['courseId'], $_POST['courseCode'], $_POST['courseTitle'], $_POST['credit'])) {
+        $courseId = $_POST['courseId'];
+        $courseCode = $_POST['courseCode'];
+        $courseTitle = $_POST['courseTitle'];
+        $credit = $_POST['credit'];
+
+        // Perform necessary validations and sanitation on the received data
+
+        // Check the connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+
+
+        // Check if the course is already registered
+
+        $checkSql = "SELECT * FROM registered_courses WHERE id = '$courseId'";
+        $result = $conn->query($checkSql);
+
+        if ($result === false) {
+            echo "Error: " . $checkSql . "<br>" . $conn->error;
+        } else {
+            if ($result->num_rows > 0) {
+             echo "Error: Course is already registered.";
+        } else {
+        // Prepare the insert query
+        $insertSql = "INSERT INTO registered_courses (id, course_code, course_title, credit, status)
+                      VALUES ('$courseId', '$courseCode', '$courseTitle', '$credit', 'registered')";
+
+        // Execute the insert query
+        if ($conn->query($insertSql) === TRUE) {
+            echo "New record inserted successfully.";
+            //header("Location: " . $_SERVER['PHP_SELF']);
+
+        } else {
+            echo "Error: " . $insertSql . "<br>" . $conn->error;
+        }
+    }
+}
+
+// Close the database connection
+$conn->close();
+        
+    }
+    
+}
+
+
+
+?>
 
 </body>
 </html>
